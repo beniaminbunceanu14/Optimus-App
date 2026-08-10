@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="../Optimus.Core/Optimus.Core.csproj" Id="1d491f09-3266-4348-92f3-7e489cc31745" />
+  <Project Path="Optimus.Benchmark/Optimus.Benchmark.csproj" Id="a1350a96-4716-4c9a-b83a-3c0b6d74a31d" />
+  <Project Path="Optimus.Diagnostics/Optimus.Diagnostics.csproj" Id="8ecb09c7-6141-4923-b9d7-cb4ca262de14" />
+  <Project Path="Optimus.Monitoring/Optimus.Monitoring.csproj" Id="6505e597-eb8b-404d-9eaf-d4d7da7b0107" />
+  <Project Path="Optimus.Optimization/Optimus.Optimization.csproj" Id="eed9d55c-18e0-4f16-9062-62221e772b9f" />
+  <Project Path="Optimus.Repair/Optimus.Repair.csproj" Id="45dbf019-3127-4bae-ac28-7e51bf392fb2" />
+  <Project Path="Optimus.Wpf/Optimus.Wpf.csproj" Id="9ceec291-2bd5-41b4-be6a-5e429ac29400" />
+</Solution>

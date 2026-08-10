@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Optimus.Core\Optimus.Core.csproj" />
+    <ProjectReference Include="..\Optimus.Benchmark\Optimus.Benchmark.csproj" />
+    <ProjectReference Include="..\Optimus.Diagnostics\Optimus.Diagnostics.csproj" />
+    <ProjectReference Include="..\Optimus.Monitoring\Optimus.Monitoring.csproj" />
+    <ProjectReference Include="..\Optimus.Optimization\Optimus.Optimization.csproj" />
+    <ProjectReference Include="..\Optimus.Repair\Optimus.Repair.csproj" />
+  </ItemGroup>
+
+</Project>

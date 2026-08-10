@@ -1,0 +1,1381 @@
+﻿<Window x:Class="Optimus.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Optimus.Wpf"
+        Title="Optimus Enterprise Suite" Height="840" Width="1350"
+        WindowStartupLocation="CenterScreen"
+        Background="#0F172A" 
+        Foreground="#F8FAFC"
+        FontFamily="Segoe UI Variable, Segoe UI, Arial"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="ClearType"
+        UseLayoutRounding="True" SnapsToDevicePixels="True">
+
+    <Window.Resources>
+        <local:HealthScoreToColorConverter x:Key="ScoreToColor" />
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#94A3B8"/>
+            <Setter Property="Padding" Value="15,12"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1E293B"/>
+                    <Setter Property="Foreground" Value="#F8FAFC"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="NeonActionButton" TargetType="Button">
+            <Setter Property="Background" Value="#1E293B"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="18,11"/>
+            <Setter Property="Margin" Value="6,0,0,0"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="BorderBrush" Value="#38BDF8"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="10">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#38BDF8" BlurRadius="8" ShadowDepth="0" Opacity="0.4"/>
+                            </Border.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#0F172A"/>
+                                <Setter TargetName="Border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#38BDF8" BlurRadius="16" ShadowDepth="0" Opacity="0.8"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SubScoreCardStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="CardBorder" Background="#1E293B" CornerRadius="8" Padding="12" BorderBrush="Transparent" BorderThickness="1">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CardBorder" Property="Background" Value="#253348"/>
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="#38BDF8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ProfileChipStyle" TargetType="Button">
+            <Setter Property="Background" Value="#1E293B"/>
+            <Setter Property="Foreground" Value="#94A3B8"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#334155"/>
+                    <Setter Property="BorderBrush" Value="#64748B"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid UseLayoutRounding="True" SnapsToDevicePixels="True">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Meniu Lateral (Sidebar) -->
+        <Border Grid.Column="0" Background="#1E293B" BorderBrush="#334155" BorderThickness="0,0,1,0">
+            <Grid Margin="20,25,20,20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- BRAND / LOGO CONTAINER -->
+                <StackPanel Grid.Row="0" Margin="5,0,0,30">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="5" Height="32" CornerRadius="3" Margin="0,0,10,0" VerticalAlignment="Center">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#38BDF8" Offset="0.0"/>
+                                    <GradientStop Color="#C084FC" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Border.Effect>
+                                <DropShadowEffect Color="#38BDF8" BlurRadius="10" ShadowDepth="0" Opacity="0.6"/>
+                            </Border.Effect>
+                        </Border>
+                        <TextBlock FontSize="28" FontWeight="Black" VerticalAlignment="Center">
+                            <TextBlock.Foreground>
+                                <LinearGradientBrush x:Name="OptimusTextGradient" StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="#38BDF8" Offset="0.0"/>
+                                    <GradientStop Color="#60A5FA" Offset="0.5"/>
+                                    <GradientStop Color="#C084FC" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </TextBlock.Foreground>
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="#38BDF8" BlurRadius="14" ShadowDepth="0" Opacity="0.4"/>
+                            </TextBlock.Effect>
+                            OPTIMUS
+                            <TextBlock.Triggers>
+                                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                            <PointAnimation Storyboard.TargetName="OptimusTextGradient" Storyboard.TargetProperty="StartPoint" From="0,0" To="0.3,0" Duration="0:0:6"/>
+                                            <PointAnimation Storyboard.TargetName="OptimusTextGradient" Storyboard.TargetProperty="EndPoint" From="1,0" To="1.3,0" Duration="0:0:6"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </TextBlock.Triggers>
+                        </TextBlock>
+                    </StackPanel>
+                    <TextBlock Text="ENTERPRISE TRUST SUITE" FontSize="9" FontWeight="Bold" Foreground="#64748B" Margin="15,4,0,0"/>
+                </StackPanel>
+
+                <!-- Navigare -->
+                <StackPanel Grid.Row="1">
+                    <Button Content="📊  Dashboard" Command="{Binding SwitchViewCommand}" CommandParameter="Dashboard" Margin="0,0,0,5">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MenuButtonStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsDashboardVisible}" Value="True">
+                                        <Setter Property="Background" Value="#334155"/>
+                                        <Setter Property="Foreground" Value="#F8FAFC"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Content="⚡  Recommendations" Command="{Binding SwitchViewCommand}" CommandParameter="Recommendations" Margin="0,0,0,5">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MenuButtonStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsRecommendationsVisible}" Value="True">
+                                        <Setter Property="Background" Value="#334155"/>
+                                        <Setter Property="Foreground" Value="#F8FAFC"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Content="🛠️  System Repair" Command="{Binding SwitchViewCommand}" CommandParameter="Repair" Margin="0,0,0,5">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MenuButtonStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsRepairVisible}" Value="True">
+                                        <Setter Property="Background" Value="#334155"/>
+                                        <Setter Property="Foreground" Value="#F8FAFC"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Content="📈  Live Metrics" Command="{Binding SwitchViewCommand}" CommandParameter="Metrics" Margin="0,0,0,5">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MenuButtonStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsMetricsVisible}" Value="True">
+                                        <Setter Property="Background" Value="#334155"/>
+                                        <Setter Property="Foreground" Value="#F8FAFC"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+
+                <!-- OPTIMUS CORE ORB -->
+                <StackPanel Grid.Row="3" HorizontalAlignment="Center" Margin="0,0,0,10">
+                    <Button Command="{Binding ToggleCoPilotDrawerCommand}" Background="Transparent" BorderThickness="0" Cursor="Hand" ToolTip="Click to Open Optimus Neural Co-Pilot">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Grid Width="70" Height="70" Background="Transparent">
+                                    <Ellipse Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="#C084FC" StrokeThickness="1.5" Opacity="0">
+                                        <Ellipse.RenderTransform>
+                                            <ScaleTransform ScaleX="1" ScaleY="1" CenterX="16" CenterY="16"/>
+                                        </Ellipse.RenderTransform>
+                                        <Ellipse.Triggers>
+                                            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                                <BeginStoryboard>
+                                                    <Storyboard RepeatBehavior="Forever">
+                                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" From="0.6" To="2.4" Duration="0:0:3"/>
+                                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="0.6" To="2.4" Duration="0:0:3"/>
+                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.7" To="0" Duration="0:0:3"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </Ellipse.Triggers>
+                                    </Ellipse>
+                                    <Ellipse Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="#38BDF8" StrokeThickness="1" Opacity="0">
+                                        <Ellipse.RenderTransform>
+                                            <ScaleTransform ScaleX="1" ScaleY="1" CenterX="16" CenterY="16"/>
+                                        </Ellipse.RenderTransform>
+                                        <Ellipse.Triggers>
+                                            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                                <BeginStoryboard>
+                                                    <Storyboard RepeatBehavior="Forever" BeginTime="0:0:1.5">
+                                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" From="0.6" To="2.5" Duration="0:0:3"/>
+                                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="0.6" To="2.5" Duration="0:0:3"/>
+                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.6" To="0" Duration="0:0:3"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </Ellipse.Triggers>
+                                    </Ellipse>
+                                    <Ellipse Width="34" Height="34" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Ellipse.Fill>
+                                            <LinearGradientBrush x:Name="OrbGradient" StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#38BDF8" Offset="0.0"/>
+                                                <GradientStop Color="#60A5FA" Offset="0.5"/>
+                                                <GradientStop Color="#C084FC" Offset="1.0"/>
+                                            </LinearGradientBrush>
+                                        </Ellipse.Fill>
+                                        <Ellipse.Effect>
+                                            <DropShadowEffect Color="#38BDF8" BlurRadius="20" ShadowDepth="0" Opacity="0.8"/>
+                                        </Ellipse.Effect>
+                                        <Ellipse.Triggers>
+                                            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                                <BeginStoryboard>
+                                                    <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                        <PointAnimation Storyboard.TargetName="OrbGradient" Storyboard.TargetProperty="StartPoint" From="0,0" To="0.5,0" Duration="0:0:5"/>
+                                                        <PointAnimation Storyboard.TargetName="OrbGradient" Storyboard.TargetProperty="EndPoint" From="1,1" To="1.5,1" Duration="0:0:5"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </Ellipse.Triggers>
+                                    </Ellipse>
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <TextBlock Text="Optimus Core" Foreground="White" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding EngineStatusText}" Foreground="#64748B" FontSize="11" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Conținut Principal -->
+        <Grid Grid.Column="1" Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="125"/>
+            </Grid.RowDefinitions>
+
+            <!-- Antet dinamic -->
+            <Grid Grid.Row="0" Margin="0,0,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{Binding ActiveNavTitle}" FontSize="26" FontWeight="Light" Foreground="#F8FAFC"/>
+                    <TextBlock Text="{Binding SystemStatusText}" FontSize="12" Foreground="#94A3B8" Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <Button Grid.Column="1" Command="{Binding CreateRestorePointCommand}" VerticalAlignment="Center" Cursor="Hand" BorderThickness="0" Background="Transparent">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="bgBorder" Background="#064E3B" BorderBrush="#059669" BorderThickness="1" CornerRadius="8" Padding="12,6">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="🛡️ " FontSize="12" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="txtContent" Text="{Binding ConfidenceStatus}" Foreground="#34D399" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="bgBorder" Property="Background" Value="#047857"/>
+                                    <Setter TargetName="txtContent" Property="Foreground" Value="White"/>
+                                    <Setter TargetName="bgBorder" Property="BorderBrush" Value="#10B981"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+
+            <!-- 1. DASHBOARD PRINCIPAL -->
+            <Grid Grid.Row="1" Grid.RowSpan="2" Visibility="{Binding IsMainDashboardVisible, Converter={StaticResource BoolToVis}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2.3*"/>
+                    <ColumnDefinition Width="1.1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" Margin="0,0,20,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Background="#1E293B" CornerRadius="12" Padding="20" Margin="0,0,0,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Health Index:" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#94A3B8"/>
+                                    <TextBlock Text="{Binding HealthScore}" FontSize="42" FontWeight="Black" Foreground="#22C55E" VerticalAlignment="Center">
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect Color="#22C55E" BlurRadius="12" ShadowDepth="0" Opacity="0.8"/>
+                                        </TextBlock.Effect>
+                                    </TextBlock>
+                                    <TextBlock Text="/ 100" FontSize="14" Foreground="#64748B" VerticalAlignment="Bottom" Margin="4,0,0,8"/>
+
+                                    <Button Command="{Binding ExplainHealthScoreCommand}" Background="Transparent" BorderThickness="0" Cursor="Hand" Margin="20,0,0,0" VerticalAlignment="Center">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <TextBlock Text="▼ Click for Why?" Foreground="#38BDF8" FontSize="11" TextDecorations="Underline"/>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                    <TextBlock Text="Trust Level:" FontSize="14" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#94A3B8"/>
+                                    <TextBlock Text="{Binding TrustScore}" FontSize="24" FontWeight="Bold" Foreground="#38BDF8" VerticalAlignment="Center">
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect Color="#38BDF8" BlurRadius="8" ShadowDepth="0" Opacity="0.6"/>
+                                        </TextBlock.Effect>
+                                    </TextBlock>
+                                    <TextBlock Text="%" FontSize="12" Foreground="#64748B" VerticalAlignment="Bottom" Margin="2,0,0,4"/>
+                                    <TextBlock Text="{Binding ConfidenceDetails}" FontSize="10" Foreground="#64748B" VerticalAlignment="Center" Margin="15,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button Content="🔍 Deep Audit" Command="{Binding RunSystemScanCommand}" Style="{StaticResource NeonActionButton}" BorderBrush="#38BDF8"/>
+                                <Button Content="⚡ Secure Optimize" Command="{Binding OptimizeSystemCommand}" Style="{StaticResource NeonActionButton}" BorderBrush="#10B981"/>
+                                <Button Content="📄 PDF Report" Command="{Binding ExportReportCommand}" Style="{StaticResource NeonActionButton}" BorderBrush="#A855F7"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Grid Grid.Row="1" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0" Command="{Binding OpenCategoryDetailCommand}" CommandParameter="Performance" Style="{StaticResource SubScoreCardStyle}" Margin="0,0,6,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="🚀" Foreground="#38BDF8" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Perf" Foreground="#64748B" FontSize="10"/>
+                                    <TextBlock Text="{Binding PerformanceScore, StringFormat={}{0}%}" Foreground="#38BDF8" FontSize="14" FontWeight="Bold"/>
+                                </StackPanel>
+                            </Grid>
+                        </Button>
+
+                        <Button Grid.Column="1" Command="{Binding OpenCategoryDetailCommand}" CommandParameter="Security" Style="{StaticResource SubScoreCardStyle}" Margin="0,0,6,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="🛡️" Foreground="#10B981" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Sec" Foreground="#64748B" FontSize="10"/>
+                                    <TextBlock Text="{Binding SecurityScore, StringFormat={}{0}%}" Foreground="#10B981" FontSize="14" FontWeight="Bold"/>
+                                </StackPanel>
+                            </Grid>
+                        </Button>
+
+                        <Button Grid.Column="2" Command="{Binding OpenCategoryDetailCommand}" CommandParameter="Storage" Style="{StaticResource SubScoreCardStyle}" Margin="0,0,6,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="💽" Foreground="#A855F7" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Store" Foreground="#64748B" FontSize="10"/>
+                                    <TextBlock Text="{Binding StorageScore, StringFormat={}{0}%}" Foreground="#A855F7" FontSize="14" FontWeight="Bold"/>
+                                </StackPanel>
+                            </Grid>
+                        </Button>
+
+                        <Button Grid.Column="3" Command="{Binding OpenCategoryDetailCommand}" CommandParameter="Drivers" Style="{StaticResource SubScoreCardStyle}" Margin="0,0,6,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="⚙️" Foreground="#38BDF8" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Drv" Foreground="#64748B" FontSize="10"/>
+                                    <TextBlock Text="{Binding DriversScore, StringFormat={}{0}%}" Foreground="#38BDF8" FontSize="14" FontWeight="Bold"/>
+                                </StackPanel>
+                            </Grid>
+                        </Button>
+
+                        <Button Grid.Column="4" Command="{Binding OpenCategoryDetailCommand}" CommandParameter="Power" Style="{StaticResource SubScoreCardStyle}" Margin="0,0,6,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="🔋" Foreground="#F59E0B" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Power" Foreground="#64748B" FontSize="10"/>
+                                    <TextBlock Text="{Binding PowerScore, StringFormat={}{0}%}" Foreground="#F59E0B" FontSize="14" FontWeight="Bold"/>
+                                </StackPanel>
+                            </Grid>
+                        </Button>
+
+                        <Button Grid.Column="5" Command="{Binding OpenCategoryDetailCommand}" CommandParameter="Gaming" Style="{StaticResource SubScoreCardStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="🎮" Foreground="#10B981" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Game" Foreground="#64748B" FontSize="10"/>
+                                    <TextBlock Text="{Binding GamingScore, StringFormat={}{0}%}" Foreground="#10B981" FontSize="14" FontWeight="Bold"/>
+                                </StackPanel>
+                            </Grid>
+                        </Button>
+                    </Grid>
+
+                    <Border Grid.Row="2" Background="#1E293B" CornerRadius="12" Padding="15" Margin="0,0,0,12">
+                        <StackPanel>
+                            <TextBlock Text="LIVE SYSTEM TELEMETRY" Foreground="#64748B" FontSize="10" FontWeight="Bold" Margin="0,0,0,10"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                    <TextBlock Text="CPU" Foreground="#94A3B8" FontSize="11"/>
+                                    <TextBlock Text="{Binding CpuLoad, StringFormat={}{0}%}" Foreground="White" FontWeight="Bold" FontSize="13" Margin="0,2,0,4"/>
+                                    <ProgressBar Value="{Binding CpuLoad}" Maximum="100" Height="4" Background="#0F172A" Foreground="#38BDF8" BorderThickness="0"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                                    <TextBlock Text="RAM" Foreground="#94A3B8" FontSize="11"/>
+                                    <TextBlock Text="{Binding RamLoad, StringFormat={}{0}%}" Foreground="White" FontWeight="Bold" FontSize="13" Margin="0,2,0,4"/>
+                                    <ProgressBar Value="{Binding RamLoad}" Maximum="100" Height="4" Background="#0F172A" Foreground="#10B981" BorderThickness="0"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                                    <TextBlock Text="GPU" Foreground="#94A3B8" FontSize="11"/>
+                                    <TextBlock Text="{Binding GpuLoad, StringFormat={}{0}%}" Foreground="White" FontWeight="Bold" FontSize="13" Margin="0,2,0,4"/>
+                                    <ProgressBar Value="{Binding GpuLoad}" Maximum="100" Height="4" Background="#0F172A" Foreground="#A855F7" BorderThickness="0"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="3" Margin="0,0,8,0">
+                                    <TextBlock Text="Disk" Foreground="#94A3B8" FontSize="11"/>
+                                    <TextBlock Text="{Binding DiskLoad, StringFormat={}{0}%}" Foreground="White" FontWeight="Bold" FontSize="13" Margin="0,2,0,4"/>
+                                    <ProgressBar Value="{Binding DiskLoad}" Maximum="100" Height="4" Background="#0F172A" Foreground="#F59E0B" BorderThickness="0"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="Net" Foreground="#94A3B8" FontSize="11"/>
+                                    <TextBlock Text="{Binding NetworkSpeed}" Foreground="White" FontWeight="Bold" FontSize="13" Margin="0,2,0,4"/>
+                                    <ProgressBar Value="25" Maximum="100" Height="4" Background="#0F172A" Foreground="#38BDF8" BorderThickness="0"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="3" Background="#1E293B" CornerRadius="12" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="HARDWARE &amp; SYSTEM SPECIFICATIONS (DETECTED)" Foreground="#64748B" FontSize="10" FontWeight="Bold" Margin="0,0,0,12"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Col 1: System & Motherboard -->
+                                <StackPanel Grid.Column="0" Margin="0,0,15,0">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <TextBlock Text="💻" Foreground="#38BDF8" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding OsVersion}" Foreground="White" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center" ToolTip="{Binding OsVersion}" TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding MachineNameDetail}" Foreground="#94A3B8" FontSize="11" Margin="26,0,0,6" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding MotherboardDetail}" Foreground="#94A3B8" FontSize="11" Margin="26,0,0,0" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+
+                                <!-- Col 2: CPU & RAM -->
+                                <StackPanel Grid.Column="1" Margin="0,0,15,0">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <TextBlock Text="🧠" Foreground="#10B981" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding CpuDetails}" Foreground="White" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center" ToolTip="{Binding CpuDetails}" TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding CpuExtraDetail}" Foreground="#94A3B8" FontSize="11" Margin="26,0,0,6" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding RamDetails}" Foreground="#94A3B8" FontSize="11" Margin="26,0,0,0" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+
+                                <!-- Col 3: GPU & Storage -->
+                                <StackPanel Grid.Column="2">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <TextBlock Text="🎮" Foreground="#A855F7" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding GpuDetails}" Foreground="White" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center" ToolTip="{Binding GpuDetails}" TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding StorageDetails}" Foreground="#94A3B8" FontSize="11" Margin="26,0,0,6" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding BiosDetails}" Foreground="#94A3B8" FontSize="11" Margin="26,0,0,0" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Border Grid.Column="1" Background="#1E293B" CornerRadius="12" Padding="15">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                            <TextBlock Text="SYSTEM TIMELINE" Foreground="White" FontWeight="SemiBold" FontSize="14"/>
+                            <TextBlock Text="Action audit stream" Foreground="#64748B" FontSize="11"/>
+                        </StackPanel>
+                        <ListBox Grid.Row="1" ItemsSource="{Binding TimelineEntries}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#0F172A" BorderBrush="#334155" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,6" Width="290">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Icon}" Foreground="#38BDF8" FontSize="14" VerticalAlignment="Center"/>
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock Text="{Binding Action}" Foreground="White" FontWeight="Medium" FontSize="11"/>
+                                                <TextBlock Text="{Binding Impact}" Foreground="#64748B" FontSize="10"/>
+                                            </StackPanel>
+                                            <TextBlock Text="{Binding Time}" Foreground="#94A3B8" FontSize="10" Grid.Column="2" VerticalAlignment="Top"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- 1.1 EXPLAIN EVERYTHING -->
+            <Grid Grid.Row="1" Grid.RowSpan="2" Visibility="{Binding IsCategoryDetailVisible, Converter={StaticResource BoolToVis}}">
+                <Border Background="#1E293B" CornerRadius="12" Padding="25">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+                            <Button Content="← Back to Dashboard" Command="{Binding CloseCategoryDetailCommand}" Style="{StaticResource ProfileChipStyle}" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                            <TextBlock Text="{Binding SelectedCategoryTitle}" FontSize="22" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding SelectedCategoryScore}" FontSize="22" FontWeight="Bold" Foreground="#38BDF8" VerticalAlignment="Center" Margin="15,0,0,0"/>
+                        </StackPanel>
+
+                        <ListBox Grid.Row="1" ItemsSource="{Binding CategoryDetails}" Background="Transparent" BorderThickness="0" Margin="0,0,0,20" HorizontalContentAlignment="Stretch">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#0F172A" BorderBrush="#334155" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,8">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0" Text="{Binding Icon}" Foreground="{Binding PenaltyColor}" FontSize="18" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="White" FontWeight="Medium" FontSize="13" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding Status}" Foreground="#94A3B8" FontSize="11" VerticalAlignment="Center" Margin="0,0,20,0"/>
+
+                                            <Border Grid.Column="3" Background="#1E293B" CornerRadius="4" Padding="6,4" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,15,0">
+                                                <TextBlock Text="{Binding Penalty}" Foreground="{Binding PenaltyColor}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center"/>
+                                            </Border>
+
+                                            <Button Grid.Column="4" Content="Fix" 
+                                                    Command="{Binding DataContext.FixSingleIssueCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" 
+                                                    CommandParameter="{Binding}"
+                                                    Visibility="{Binding HasIssue, Converter={StaticResource BoolToVis}}"
+                                                    Style="{StaticResource ProfileChipStyle}" Foreground="#10B981" BorderBrush="#10B981" Padding="12,4"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <Border Grid.Row="2" Background="#0B0F19" CornerRadius="8" Padding="15">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Text="Optimus Core AI Recommendation" Foreground="#38BDF8" FontWeight="Bold" FontSize="12"/>
+                                    <TextBlock Text="{Binding SelectedCategoryRecommendation}" Foreground="White" FontSize="14" Margin="0,2,0,0"/>
+                                    <TextBlock Text="{Binding SelectedCategoryGain}" Foreground="#10B981" FontSize="12" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <Button Content="Apply Category Fixes" Command="{Binding FixCategoryCommand}" Style="{StaticResource NeonActionButton}" Grid.Column="1" BorderBrush="#10B981" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- 2. RECOMMENDATIONS VIEW -->
+            <Grid Grid.Row="1" Grid.RowSpan="2" Visibility="{Binding IsRecommendationsVisible, Converter={StaticResource BoolToVis}}">
+                <Border Background="#1E293B" CornerRadius="12" Padding="25">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="Smart System Recommendations" FontSize="22" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,4"/>
+                                <TextBlock Text="Safely toggle OS features via direct Registry optimization." Foreground="#94A3B8" FontSize="12"/>
+                            </StackPanel>
+                            <Button Grid.Column="1" Content="⚡ Apply All Safe Fixes" Command="{Binding ApplyAllSafeRecommendationsCommand}" Style="{StaticResource NeonActionButton}" BorderBrush="#10B981" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <ItemsControl ItemsSource="{Binding RecommendationsList}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#0F172A" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" Padding="15" Margin="0,0,0,12">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="140"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Grid.Column="0" Width="42" Height="42" CornerRadius="8" Background="#1E293B" Margin="0,0,15,0" VerticalAlignment="Top">
+                                                    <TextBlock Text="{Binding CategoryIcon}" Foreground="#38BDF8" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <StackPanel Grid.Column="1" Margin="0,0,15,0">
+                                                    <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="14" Foreground="White" Margin="0,0,0,4"/>
+                                                    <TextBlock Text="{Binding Description}" Foreground="#94A3B8" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,10"/>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,3" Margin="0,0,8,0">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="Confidence: " Foreground="#64748B" FontSize="10"/>
+                                                                <TextBlock Text="{Binding ConfidenceBadge}" Foreground="#38BDF8" FontSize="10" FontWeight="Bold"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,3" Margin="0,0,8,0">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="Impact: " Foreground="#64748B" FontSize="10"/>
+                                                                <TextBlock Text="{Binding ImpactBadge}" Foreground="White" FontSize="10" FontWeight="Bold"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                        <Border Background="#1E293B" BorderBrush="{Binding RiskColor}" BorderThickness="1" CornerRadius="4" Padding="6,3">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="Risk: " Foreground="#64748B" FontSize="10"/>
+                                                                <TextBlock Text="{Binding RiskBadge}" Foreground="{Binding RiskColor}" FontSize="10" FontWeight="Bold"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <Button Grid.Column="2" 
+                                                        Command="{Binding DataContext.ApplyRecommendationCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                                        CommandParameter="{Binding}" Height="36" VerticalAlignment="Center">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource ProfileChipStyle}">
+                                                            <Setter Property="Content" Value="Apply Fix" />
+                                                            <Setter Property="Foreground" Value="#38BDF8" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsApplied}" Value="True">
+                                                                    <Setter Property="Content" Value="Revert ↺" />
+                                                                    <Setter Property="Foreground" Value="#F59E0B" />
+                                                                    <Setter Property="BorderBrush" Value="#F59E0B" />
+                                                                    <Setter Property="Background" Value="#1E293B" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                </Button>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- 3. SYSTEM REPAIR VIEW -->
+            <Grid Grid.Row="1" Grid.RowSpan="2" Visibility="{Binding IsRepairVisible, Converter={StaticResource BoolToVis}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2.3*"/>
+                    <ColumnDefinition Width="1.1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Margin="0,0,20,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Background="#1E293B" CornerRadius="12" Padding="15" Margin="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="WINDOWS COMPONENT INTEGRITY" Foreground="#64748B" FontSize="10" FontWeight="Bold" Margin="0,0,0,10"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                    <TextBlock Text="System Files: " Foreground="#94A3B8" FontSize="11"/>
+                                    <TextBlock Text="Healthy ✔" Foreground="#10B981" FontSize="11" FontWeight="Bold"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <TextBlock Text="Registry: " Foreground="#94A3B8" FontSize="11"/>
+                                    <TextBlock Text="Healthy ✔" Foreground="#10B981" FontSize="11" FontWeight="Bold"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                    <TextBlock Text="Network Stack: " Foreground="#94A3B8" FontSize="11"/>
+                                    <TextBlock Text="Warning ⚠" Foreground="#F59E0B" FontSize="11" FontWeight="Bold"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="3" Orientation="Horizontal">
+                                    <TextBlock Text="Component Store: " Foreground="#94A3B8" FontSize="11"/>
+                                    <TextBlock Text="Healthy ✔" Foreground="#10B981" FontSize="11" FontWeight="Bold"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding RepairToolsList}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#0F172A" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" Padding="18" Margin="0,0,0,15">
+                                        <StackPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="140"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Grid.Column="0" Width="46" Height="46" CornerRadius="8" Background="#1E293B" Margin="0,0,15,0" VerticalAlignment="Top">
+                                                    <TextBlock Text="{Binding Icon}" Foreground="#38BDF8" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <StackPanel Grid.Column="1" Margin="0,0,15,0">
+                                                    <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="15" Foreground="White" Margin="0,0,0,2"/>
+                                                    <TextBlock Text="{Binding Description}" Foreground="#94A3B8" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                                    <TextBlock Text="{Binding StatusText}" Foreground="{Binding RiskColor}" FontSize="11" FontWeight="Medium" Margin="0,0,0,10"/>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,3" Margin="0,0,8,0">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="Est. Time: " Foreground="#64748B" FontSize="10"/>
+                                                                <TextBlock Text="{Binding EstTime}" Foreground="White" FontSize="10" FontWeight="Bold"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,3" Margin="0,0,8,0">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="Restart: " Foreground="#64748B" FontSize="10"/>
+                                                                <TextBlock Text="{Binding RequiresRestart}" Foreground="#F59E0B" FontSize="10" FontWeight="Bold"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,3">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="Confidence: " Foreground="#64748B" FontSize="10"/>
+                                                                <TextBlock Text="{Binding Confidence}" Foreground="#38BDF8" FontSize="10" FontWeight="Bold"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                    <Button Command="{Binding DataContext.RunRepairCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                                            CommandParameter="{Binding}" Width="130" Height="36" Margin="0,0,0,8">
+                                                        <Button.Style>
+                                                            <Style TargetType="Button" BasedOn="{StaticResource ProfileChipStyle}">
+                                                                <Setter Property="Content" Value="{Binding ButtonText}" />
+                                                                <Setter Property="IsEnabled" Value="True" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                                                                        <Setter Property="IsEnabled" Value="False" />
+                                                                        <Setter Property="Foreground" Value="#F59E0B" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Button.Style>
+                                                    </Button>
+
+                                                    <Button Command="{Binding DataContext.ToggleExplanationCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                                            CommandParameter="{Binding}" Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Center">
+                                                        <Button.Template>
+                                                            <ControlTemplate TargetType="Button">
+                                                                <TextBlock Text="What does this do?" Foreground="#38BDF8" FontSize="10" TextDecorations="Underline"/>
+                                                            </ControlTemplate>
+                                                        </Button.Template>
+                                                    </Button>
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <!-- Fereastra Explicativă (Accordion/Flyout) -->
+                                            <Border Background="#060913" BorderBrush="#1E293B" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,15,0,0"
+                                                    Visibility="{Binding IsExplanationVisible, Converter={StaticResource BoolToVis}}">
+                                                <TextBlock Text="{Binding ExplanationText}" Foreground="#94A3B8" FontSize="11" FontFamily="Consolas" TextWrapping="Wrap"/>
+                                            </Border>
+
+                                            <StackPanel Margin="0,15,0,0">
+                                                <StackPanel.Style>
+                                                    <Style TargetType="StackPanel">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </StackPanel.Style>
+                                                <Grid Margin="0,0,0,4">
+                                                    <TextBlock Text="{Binding ProgressText}" Foreground="#38BDF8" FontSize="11" HorizontalAlignment="Left"/>
+                                                    <TextBlock Text="{Binding ProgressValue, StringFormat={}{0}%}" Foreground="#94A3B8" FontSize="11" HorizontalAlignment="Right"/>
+                                                </Grid>
+                                                <ProgressBar Value="{Binding ProgressValue}" Maximum="100" Height="6" Background="#1E293B" Foreground="#38BDF8" BorderThickness="0"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Background="#1E293B" CornerRadius="12" Padding="15" Margin="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="SYSTEM RESTORE MANAGER" Foreground="White" FontWeight="SemiBold" FontSize="14" Margin="0,0,0,10"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <TextBlock Text="✔" Foreground="#10B981" Margin="0,0,8,0"/>
+                                <TextBlock Text="Restore Point Created Today" Foreground="#94A3B8" FontSize="11"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <TextBlock Text="✔" Foreground="#10B981" Margin="0,0,8,0"/>
+                                <TextBlock Text="Registry Backup Available" Foreground="#94A3B8" FontSize="11"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                <TextBlock Text="✔" Foreground="#10B981" Margin="0,0,8,0"/>
+                                <TextBlock Text="Rollback Package Ready" Foreground="#94A3B8" FontSize="11"/>
+                            </StackPanel>
+                            <Button Command="{Binding OpenRestoreManagerCommand}" Style="{StaticResource ProfileChipStyle}" HorizontalAlignment="Stretch" Padding="8,8">
+                                <TextBlock Text="Open Restore Manager" FontSize="11" Foreground="#38BDF8"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Background="#1E293B" CornerRadius="12" Padding="15">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                                <TextBlock Text="REPAIR TIMELINE" Foreground="White" FontWeight="SemiBold" FontSize="14"/>
+                                <TextBlock Text="Historical execution log" Foreground="#64748B" FontSize="11"/>
+                            </StackPanel>
+                            <ListBox Grid.Row="1" ItemsSource="{Binding RepairHistory}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#0F172A" CornerRadius="6" Padding="10" Margin="0,0,0,6" Width="290">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="32"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Width="24" Height="24" CornerRadius="6" Background="#1E293B" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                                    <TextBlock Text="{Binding Icon}" Foreground="#38BDF8" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Action}" Foreground="White" FontWeight="Medium" FontSize="11"/>
+                                                    <TextBlock Text="{Binding Impact}" Foreground="#64748B" FontSize="10"/>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Time}" Foreground="#94A3B8" FontSize="10" Grid.Column="2" VerticalAlignment="Top"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <!-- 4. LIVE METRICS VIEW -->
+            <Grid Grid.Row="1" Grid.RowSpan="2" Visibility="{Binding IsMetricsVisible, Converter={StaticResource BoolToVis}}">
+                <Border Background="#1E293B" CornerRadius="12" Padding="25">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="Hardware &amp; Kernel Telemetry" FontSize="22" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,4"/>
+                                <TextBlock Text="Live monitoring active. Polling deep kernel drivers and hardware sensors." Foreground="#94A3B8" FontSize="12"/>
+                            </StackPanel>
+                            <Button Grid.Column="1" Content="🔄 Refresh Metrics" Command="{Binding RefreshMetricsCommand}" Style="{StaticResource NeonActionButton}" BorderBrush="#38BDF8" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <Grid Grid.Row="1" Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" Background="#131B2E" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" Padding="15" Margin="0,0,8,0">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <TextBlock Text="CPU" Foreground="#94A3B8" FontWeight="Bold" FontSize="11" Width="50"/>
+                                        <TextBlock Text="{Binding CpuTemp}" Foreground="#F59E0B" FontSize="11" FontWeight="Bold" HorizontalAlignment="Right" Margin="90,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding CpuLoad, StringFormat={}{0}%}" Foreground="White" FontSize="26" FontWeight="Black" Margin="0,0,0,2"/>
+                                    <TextBlock Text="{Binding CpuClock}" Foreground="#38BDF8" FontSize="12" Margin="0,0,0,10"/>
+                                    <ProgressBar Value="{Binding CpuLoad}" Maximum="100" Height="4" Background="#0F172A" Foreground="#38BDF8" BorderThickness="0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Grid.Column="1" Background="#131B2E" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" Padding="15" Margin="4,0,4,0">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <TextBlock Text="RAM" Foreground="#94A3B8" FontWeight="Bold" FontSize="11" Width="50"/>
+                                        <TextBlock Text="3200 MHz" Foreground="#64748B" FontSize="11" HorizontalAlignment="Right" Margin="70,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding RamLoad, StringFormat={}{0}%}" Foreground="White" FontSize="26" FontWeight="Black" Margin="0,0,0,2"/>
+                                    <TextBlock Text="{Binding RamUsageText}" Foreground="#10B981" FontSize="12" Margin="0,0,0,10"/>
+                                    <ProgressBar Value="{Binding RamLoad}" Maximum="100" Height="4" Background="#0F172A" Foreground="#10B981" BorderThickness="0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Grid.Column="2" Background="#131B2E" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" Padding="15" Margin="4,0,4,0">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <TextBlock Text="GPU" Foreground="#94A3B8" FontWeight="Bold" FontSize="11" Width="50"/>
+                                        <TextBlock Text="{Binding GpuTemp}" Foreground="#10B981" FontSize="11" FontWeight="Bold" HorizontalAlignment="Right" Margin="90,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding GpuLoad, StringFormat={}{0}%}" Foreground="White" FontSize="26" FontWeight="Black" Margin="0,0,0,2"/>
+                                    <TextBlock Text="{Binding GpuClock}" Foreground="#A855F7" FontSize="12" Margin="0,0,0,10"/>
+                                    <ProgressBar Value="{Binding GpuLoad}" Maximum="100" Height="4" Background="#0F172A" Foreground="#A855F7" BorderThickness="0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Grid.Column="3" Background="#131B2E" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" Padding="15" Margin="8,0,0,0">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <TextBlock Text="NETWORK" Foreground="#94A3B8" FontWeight="Bold" FontSize="11" Width="60"/>
+                                        <TextBlock Text="{Binding NetworkPing}" Foreground="#10B981" FontSize="11" HorizontalAlignment="Right" Margin="50,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding NetworkSpeed}" Foreground="White" FontSize="26" FontWeight="Black" Margin="0,0,0,2"/>
+                                    <TextBlock Text="Packets: Stable" Foreground="#64748B" FontSize="12" Margin="0,0,0,10"/>
+                                    <ProgressBar Value="25" Maximum="100" Height="4" Background="#0F172A" Foreground="#38BDF8" BorderThickness="0"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" Background="#0B0F19" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" Padding="15" Margin="0,0,15,0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Text="PROCESS TRUST MONITOR" Foreground="White" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,10"/>
+
+                                    <Grid Grid.Row="0" Margin="0,25,0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1.5*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Process Name" Foreground="#64748B" FontSize="10" FontWeight="Bold"/>
+                                        <TextBlock Grid.Column="1" Text="CPU" Foreground="#64748B" FontSize="10" FontWeight="Bold"/>
+                                        <TextBlock Grid.Column="2" Text="Memory" Foreground="#64748B" FontSize="10" FontWeight="Bold"/>
+                                        <TextBlock Grid.Column="3" Text="Trust Rating" Foreground="#64748B" FontSize="10" FontWeight="Bold"/>
+                                    </Grid>
+
+                                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                        <ItemsControl ItemsSource="{Binding TopProcesses}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="0,4,0,4">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="2*"/>
+                                                            <ColumnDefinition Width="1*"/>
+                                                            <ColumnDefinition Width="1*"/>
+                                                            <ColumnDefinition Width="1.5*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="{Binding ProcessName}" Foreground="White" FontSize="11" VerticalAlignment="Center"/>
+                                                        <TextBlock Grid.Column="1" Text="{Binding CpuUsage}" Foreground="#94A3B8" FontSize="11" VerticalAlignment="Center"/>
+                                                        <TextBlock Grid.Column="2" Text="{Binding RamUsage}" Foreground="#94A3B8" FontSize="11" VerticalAlignment="Center"/>
+
+                                                        <Border Grid.Column="3" Background="#1E293B" CornerRadius="4" Padding="6,2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                            <TextBlock Text="{Binding RiskLevel}" Foreground="{Binding RiskColor}" FontSize="10" FontWeight="Bold"/>
+                                                        </Border>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Border>
+
+                            <Border Grid.Column="1" Background="#0B0F19" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" Padding="15">
+                                <StackPanel>
+                                    <TextBlock Text="OS KERNEL STATS" Foreground="White" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,15"/>
+
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="System Uptime" Foreground="#64748B" FontSize="10" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding SystemUptime}" Foreground="White" FontSize="14" FontFamily="Consolas" Margin="0,2,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="Active Threads" Foreground="#64748B" FontSize="10" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding ThreadCount}" Foreground="#38BDF8" FontSize="14" FontFamily="Consolas" Margin="0,2,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="Open Handles" Foreground="#64748B" FontSize="10" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding HandleCount}" Foreground="#10B981" FontSize="14" FontFamily="Consolas" Margin="0,2,0,0"/>
+                                    </StackPanel>
+
+                                    <Separator Background="#1E293B" Margin="0,5,0,10"/>
+
+                                    <TextBlock Text="Telemetry Stream: Active thread polling normal [OK]" Foreground="#10B981" FontSize="10" FontFamily="Consolas" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Terminal / Live Audit Stream -->
+            <Border Grid.Row="3" Background="#0F172A" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,12,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,6">
+                        <TextBlock Text="TRUST AUDIT STREAM:" Foreground="#10B981" FontWeight="Bold" FontFamily="Consolas" FontSize="11"/>
+                        <TextBlock Text=" (Confidence Layer &amp; Explain Everything Logs)" Foreground="#64748B" FontFamily="Consolas" FontSize="11" Margin="5,0,0,0"/>
+                    </StackPanel>
+
+                    <ListBox Grid.Row="1" ItemsSource="{Binding TerminalLogs}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="0,2">
+                                    <TextBlock Text="{Binding Timestamp}" Foreground="#64748B" FontFamily="Consolas" FontSize="11" Margin="0,0,8,0"/>
+                                    <TextBlock Text="[" Foreground="#475569" FontFamily="Consolas" FontSize="11"/>
+                                    <TextBlock Text="{Binding StatusType}" Foreground="#38BDF8" FontFamily="Consolas" FontSize="11" FontWeight="Bold"/>
+                                    <TextBlock Text="]" Foreground="#475569" FontFamily="Consolas" FontSize="11" Margin="0,0,8,0"/>
+                                    <TextBlock Text="{Binding Message}" Foreground="#CBD5E1" FontFamily="Consolas" FontSize="11"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- NOU: OPTIMUS NEURAL CO-PILOT HOLOGRAPHIC OVERLAY AVANSAT -->
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Background="#800B0F19" 
+              Visibility="{Binding IsCoPilotOpen, Converter={StaticResource BoolToVis}}"
+              Panel.ZIndex="100" UseLayoutRounding="True" SnapsToDevicePixels="True">
+
+            <Border Background="#1E293B" BorderBrush="#38BDF8" BorderThickness="1.5" CornerRadius="16" 
+                    Width="720" Height="530" 
+                    VerticalAlignment="Bottom" HorizontalAlignment="Left" 
+                    Margin="35,0,0,95" Padding="25"
+                    RenderTransformOrigin="0,1"
+                    UseLayoutRounding="True" SnapsToDevicePixels="True">
+
+                <Border.RenderTransform>
+                    <ScaleTransform x:Name="HologramScale" ScaleX="0.2" ScaleY="0.2"/>
+                </Border.RenderTransform>
+                <Border.Opacity>0</Border.Opacity>
+
+                <Border.Triggers>
+                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="HologramScale" Storyboard.TargetProperty="ScaleX" From="0.2" To="1" Duration="0:0:0.35">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetName="HologramScale" Storyboard.TargetProperty="ScaleY" From="0.2" To="1" Duration="0:0:0.35">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.3"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Border.Triggers>
+
+                <Border.Effect>
+                    <DropShadowEffect Color="#38BDF8" BlurRadius="35" ShadowDepth="0" Opacity="0.6"/>
+                </Border.Effect>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Antet Co-Pilot cu Heartbeat Dot -->
+                    <Grid Grid.Row="0" Margin="0,0,0,10">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🔮" FontSize="20" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Text="Optimus Neural Co-Pilot" FontSize="18" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+
+                            <!-- Status Pulsing Dot -->
+                            <Ellipse Width="8" Height="8" Fill="#10B981" Margin="12,0,4,0" VerticalAlignment="Center">
+                                <Ellipse.Triggers>
+                                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.2" Duration="0:0:1"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Ellipse.Triggers>
+                            </Ellipse>
+                            <TextBlock Text="Engine Live" Foreground="#10B981" FontSize="10" VerticalAlignment="Center" FontFamily="Consolas"/>
+                        </StackPanel>
+                        <Button Content="✕" Command="{Binding ToggleCoPilotDrawerCommand}" HorizontalAlignment="Right" Background="Transparent" Foreground="#94A3B8" BorderThickness="0" FontSize="14" Cursor="Hand"/>
+                    </Grid>
+
+                    <!-- Câmp de Input Prompt cu Placeholder Dinamic & Command Discovery Popup -->
+                    <Grid Grid.Row="1" Margin="0,0,0,8">
+                        <Border Background="#0F172A" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" Padding="12,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{Binding DynamicPlaceholder}" Foreground="#475569" FontSize="13" VerticalAlignment="Center" Margin="4,0,0,0" IsHitTestVisible="False"/>
+
+                                <TextBox Text="{Binding CoPilotInputText, UpdateSourceTrigger=PropertyChanged}" 
+                                         Background="Transparent" BorderThickness="0" Foreground="White" FontSize="14" 
+                                         VerticalContentAlignment="Center"
+                                         CaretBrush="White">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Key="Enter" Command="{Binding SubmitCoPilotCommand}"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
+
+                                <Button Grid.Column="1" Content="Execută" Command="{Binding SubmitCoPilotCommand}" Style="{StaticResource NeonActionButton}" Padding="18,6"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Autocomplete / Command Discovery Dropdown la tasta '/' -->
+                        <Popup IsOpen="{Binding IsCommandDiscoveryOpen}" PlacementTarget="{Binding ElementName=CoPilotTextBox}" StaysOpen="False" VerticalOffset="5">
+                            <Border Background="#1E293B" BorderBrush="#38BDF8" BorderThickness="1" CornerRadius="8" Width="300" Padding="8">
+                                <ItemsControl ItemsSource="{Binding DiscoveryCommands}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Content="{Binding}" Command="{Binding DataContext.SelectDiscoveryCommandCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"
+                                                    Background="Transparent" Foreground="#38BDF8" BorderThickness="0" HorizontalContentAlignment="Left" Padding="8,6" Cursor="Hand"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </Popup>
+                    </Grid>
+
+                    <!-- Ghid Utilizator Nou / Quick Chips -->
+                    <StackPanel Grid.Row="2" Margin="0,0,0,6">
+                        <TextBlock Text="💡 Comenzi rapide recomandate (sau tastați /):" Foreground="#94A3B8" FontSize="11" Margin="0,0,0,6"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="🔥 Temperatură" 
+                                    Command="{Binding RunCoPilotQuickCommandCommand}" CommandParameter="temperatura"
+                                    Style="{StaticResource ProfileChipStyle}" Foreground="#F59E0B" BorderBrush="#F59E0B" Padding="8,4" Margin="0,0,6,0"/>
+
+                            <Button Content="🧹 Curăță Junk" 
+                                    Command="{Binding RunCoPilotQuickCommandCommand}" CommandParameter="curatare"
+                                    Style="{StaticResource ProfileChipStyle}" Foreground="#38BDF8" BorderBrush="#38BDF8" Padding="8,4" Margin="0,0,6,0"/>
+
+                            <Button Content="🌐 Reset DNS" 
+                                    Command="{Binding RunCoPilotQuickCommandCommand}" CommandParameter="retea"
+                                    Style="{StaticResource ProfileChipStyle}" Foreground="#10B981" BorderBrush="#10B981" Padding="8,4" Margin="0,0,6,0"/>
+
+                            <Button Content="⚡ Gaming Mode" 
+                                    Command="{Binding RunCoPilotQuickCommandCommand}" CommandParameter="gaming"
+                                    Style="{StaticResource ProfileChipStyle}" Foreground="#C084FC" BorderBrush="#C084FC" Padding="8,4"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Panou de Răspuns Structurat cu Typewriter Effect -->
+                    <Border Grid.Row="4" Background="#0B0F19" BorderBrush="#1E293B" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,6,0,10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,8">
+                                <TextBlock Text="DIAGNOSTIC &amp; RĂSPUNS KERNEL AI:" Foreground="#38BDF8" FontSize="10" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <TextBlock Text="Kernel Core v4.2 Local Engine [ACTIVE]" Foreground="#10B981" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="Consolas"/>
+                            </Grid>
+
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="130">
+                                <TextBlock Text="{Binding CoPilotAIResponse}" Foreground="#E2E8F0" FontSize="13" TextWrapping="Wrap" FontFamily="Consolas" LineHeight="18"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+
+                    <!-- Card Proactiv / Pre-Flight Check pentru Planul Autonom -->
+                    <Border Grid.Row="5" Background="#064E3B" BorderBrush="#059669" BorderThickness="1.2" CornerRadius="8" Padding="12">
+                        <Border.Effect>
+                            <DropShadowEffect x:Name="CardGlow" Color="#10B981" BlurRadius="12" ShadowDepth="0" Opacity="0.6"/>
+                        </Border.Effect>
+                        <Border.Triggers>
+                            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                        <DoubleAnimation Storyboard.TargetName="CardGlow" Storyboard.TargetProperty="BlurRadius" From="8" To="22" Duration="0:0:1.5"/>
+                                        <DoubleAnimation Storyboard.TargetName="CardGlow" Storyboard.TargetProperty="Opacity" From="0.4" To="0.9" Duration="0:0:1.5"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Border.Triggers>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding ProactiveAlertTitle}" Foreground="#34D399" FontWeight="Bold" FontSize="12"/>
+                                    <TextBlock Text="{Binding ProactiveAlertDescription}" Foreground="#A7F3D0" FontSize="11" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="Examenează &amp; Execută" Command="{Binding TriggerPreflightCheckCommand}" Style="{StaticResource ProfileChipStyle}" Foreground="#34D399" BorderBrush="#059669" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <!-- Pre-Flight Checklist Expandabil -->
+                            <StackPanel Grid.Row="1" Margin="0,10,0,0" Visibility="{Binding IsPreflightVisible, Converter={StaticResource BoolToVis}}">
+                                <Separator Background="#059669" Margin="0,0,0,8"/>
+                                <TextBlock Text="PRE-FLIGHT CHECKLIST (Acțiuni planificate):" Foreground="#34D399" FontWeight="Bold" FontSize="10" Margin="0,0,0,4"/>
+                                <TextBlock Text=" • Pasul 1: Ștergere fișiere temporare din %TEMP%\n • Pasul 2: Golire cache DNS local\n • Pasul 3: Optimizare timpi de răspuns registri" Foreground="#A7F3D0" FontSize="11" FontFamily="Consolas" Margin="0,0,0,10"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button Content="Anulează" Command="{Binding TriggerPreflightCheckCommand}" Style="{StaticResource ProfileChipStyle}" Foreground="#94A3B8" BorderBrush="#334155" Padding="10,4" Margin="0,0,8,0"/>
+                                    <Button Content="Confirmă &amp; Execută ✔" Command="{Binding ConfirmAndExecuteAutonomousPlanCommand}" Style="{StaticResource ProfileChipStyle}" Foreground="White" Background="#059669" BorderBrush="#10B981" Padding="12,4"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
