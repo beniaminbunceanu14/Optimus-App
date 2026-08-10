@@ -1,11 +1,13 @@
 
 #  Optimus Enterprise Suite
+<img width="1911" height="982" alt="image" src="https://github.com/user-attachments/assets/f1251ee3-d9b1-44e1-b8a5-a005d42d8c60" />
 
 **Optimus Enterprise Suite** is an advanced, enterprise-grade system diagnostic, telemetry, and optimization tool built for Windows. Designed with a strict local-first architecture, it provides absolute control over hardware resources and OS integrity without relying on cloud analytics or external APIs.
 
 The core of the application is the **Optimus Neural Co-Pilot**, a built-in NLP (Natural Language Processing) intent engine that parses user commands in real-time to execute deep system diagnostics, cleanups, and registry optimizations with zero latency.
 
 ## 🚀 Core Features
+<img width="1896" height="961" alt="image" src="https://github.com/user-attachments/assets/612fbf76-abcc-420d-a9ae-0d8237fb6285" />
 
 *   **Live Hardware Telemetry:** Real-time, deep-level monitoring of CPU, RAM, GPU, Disk, and Network stack (ping, speeds, handle counts, and active threads).
 *   **Neural Co-Pilot (Local Intent Engine):** A holographic command-line interface that understands natural language triggers to execute tasks (e.g., polling sensors, flushing DNS, cleaning temp files).
